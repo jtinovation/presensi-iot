@@ -29,7 +29,7 @@ while True:
     # Validasi apakah tabel di database sudah ada
     db = mysql.connector.connect(
         host="localhost",
-        user="user",
+        user="tefa",
         password="123",
         database="absensi"
     )
