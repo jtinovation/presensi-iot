@@ -1,5 +1,6 @@
 apt install --upgrade pip
 sudo apt install -y python3-libcamera python3-kms++ libcap-dev
+sudo pip install adafruit-blinka
 
 Install Apache: sudo apt-get install apache2 -y
 

@@ -1,10 +1,52 @@
-numpy==1.24.3
-picamera2==0.3.9
-opencv-contrib-python==4.9.0.80
-Pillow==9.5.0
-mysql-connector-python==8.3.0
-RPi.GPIO==0.7.1
+# numpy==1.24.3
+# picamera2==0.3.9
+# opencv-contrib-python==4.9.0.80
+# Pillow==9.5.0
+# mysql-connector-python==8.3.0
+# RPi.GPIO==0.7.1
+# mfrc522==0.0.7
+# spidev==3.6
+# requests==3.23.3
+
+# sudo pip install adafruit-blinka
+
+Adafruit-Blinka==8.40.1
+adafruit-circuitpython-busdevice==5.2.9
+adafruit-circuitpython-connectionmanager==3.1.0
+adafruit-circuitpython-framebuf==1.6.5
+adafruit-circuitpython-requests==4.0.0
+adafruit-circuitpython-ssd1306==2.12.17
+adafruit-circuitpython-typing==1.10.3
+Adafruit-GPIO==1.0.3
+Adafruit-PlatformDetect==3.68.0
+Adafruit-PureIO==1.1.11
+adafruit-python-shell==1.8.1
+Adafruit-SSD1306==1.6.2
+args==0.1.0
+certifi==2024.6.2
+charset-normalizer==3.3.2
+clint==0.5.1
+colorzero==2.0
+idna==3.7
 mfrc522==0.0.7
+mysql-connector-python==8.3.0
+numpy==1.24.3
+opencv-contrib-python==4.9.0.80
+picamera2==0.3.9
+pidng==4.0.9
+piexif==1.1.3
+Pillow==9.5.0
+pyftdi==0.55.4
+pyserial==3.5
+
+# Before instaling python-prctl you should sudo apt install -y python3-libcamera python3-kms++ libcap-dev
+
+python-prctl==1.8.1
+pyusb==1.2.1
+requests==2.32.3
+RPi.GPIO==0.7.1
+rpi_ws281x==5.0.0
+simplejpeg==1.7.2
 spidev==3.6
 
 
