@@ -22,7 +22,7 @@ reader = SimpleMFRC522()
 serial = i2c(port=1, address=0x3C)
 oled = ssd1306(serial, width=128, height=32)
 
-font_path = "/home/jtinova/Downloads/DejaVu_Sans/DejaVuSans-Bold.ttf"
+font_path = "DejaVuSans-Bold.ttf"
 font_size = 14  # Sesuaikan ukuran font untuk layar 128x32
 font_oled = ImageFont.truetype(font_path, font_size)
 
@@ -76,9 +76,16 @@ def buzz(duration):
 
 def oled_display(text, duration):
     with canvas(oled) as draw:
-            draw.text((0, 0), text, font=font_oled, fill="white")
+        # Membagi teks menjadi beberapa baris jika panjangnya melebihi panjang maksimum layar
+        max_chars_per_line = 10  # Panjang maksimum karakter per baris pada layar OLED
+        lines = [text[i:i+max_chars_per_line] for i in range(0, len(text), max_chars_per_line)]
+        y = 0
+        for line in lines:
+            draw.text((0, y), line, font=font_oled, fill="white")
+            y += font_size  # Menambah nilai y agar teks berikutnya dimulai dari baris berikutnya
     time.sleep(duration)
     oled.clear()
+
 
 def check_server(address, port):
     s = socket.socket()
@@ -90,30 +97,16 @@ def check_server(address, port):
         print("Koneksi server sukses.")
         oled_display("Server terhubung.", 2)
         return True
-        # display_text_on_oled("Koneksi server sukses.", 16)
-        # time.sleep(1.5)
-        # clear_oled_display() 
-    
+
     except Exception as e:
     
         print(f"Koneksi server gagal: {e}")
         oled_display("Server terputus.", 2)
         return False
-        # display_text_on_oled("Koneksi server gagal.", 16)
-        # time.sleep(1.5)
-        # clear_oled_display() 
     
     finally:
 
         s.close()
-
-    # Create the I2C interface.
-    i2c = busio.I2C(SCL, SDA)
-    # Create the SSD1306 OLED class.
-    disp = adafruit_ssd1306.SSD1306_I2C(128, 32, i2c)
-    # Clear display.
-    disp.fill(0)
-    disp.show()
 
 def read_rfid():
 
@@ -169,7 +162,7 @@ def face_recognition(folder_name, folder_uid, start_time, cap):
             confpos = (x + 5, y + h - 5)
             cv2.rectangle(frame, (x, y), (x + w, y + h), boxColor, 3)
             id, confidence = recognizer.predict(frameGray[y:y+h, x:x+w])
-            if confidence < 45 and not status_sent:
+            if confidence <= 40 and not status_sent:
                 label_name = "Wajah Dikenali"
                 confidence_text = f"{100 - confidence:.0f}%"
                 timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -276,17 +269,25 @@ def main():
                     status_sent = face_recognition(folder_name, folder_uid, start_time, cap)
 
                     if not status_sent:
+                        time.sleep(10)
                         cv2.destroyAllWindows()
                         print("Gagal mengenali wajah dalam 30 detik. Silakan tempelkan RFID kembali.")
                         oled_display("Wajah tidak dikenali.", 2)
                         buzz(1)
+                        cap.release()
+                        GPIO.cleanup()
+                        cv2.destroyAllWindows()
                         continue  # Restart the process if no face is recognized
 
                     if status_sent:
+                        time.sleep(10)
                         cv2.destroyAllWindows()
                         oled_display("Presensi sukses.", 2)
                         buzz(1)
                         print("\nPresensi telah selesai. Silakan tempelkan RFID kembali.")
+                        cap.release()
+                        GPIO.cleanup()
+                        cv2.destroyAllWindows()
 
                 # Jika server terputus, lanjutkan ke proses RFID tanpa mencoba koneksi lagi
                 else:
@@ -305,17 +306,24 @@ def main():
                     status_sent = face_recognition(folder_name, folder_uid, start_time, cap)
 
                     if not status_sent:
+                        time.sleep(10)
                         cv2.destroyAllWindows()
                         print("Gagal mengenali wajah dalam 30 detik. Silakan tempelkan RFID kembali.")
                         oled_display("Wajah tidak dikenali.", 2)
                         buzz(1)
+                        cap.release()
+                        GPIO.cleanup()
+                        cv2.destroyAllWindows()
                         continue  # Restart the process if no face is recognized
 
                     if status_sent:
-                        cv2.destroyAllWindows()
+                        time.sleep(10)
                         oled_display("Presensi sukses.", 2)
                         buzz(1)
                         print("\nPresensi telah selesai. Silakan tempelkan RFID kembali.")
+                        cap.release()
+                        GPIO.cleanup()
+                        cv2.destroyAllWindows()
 
         except Exception as e:
             print(e)

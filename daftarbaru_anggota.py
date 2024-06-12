@@ -20,9 +20,9 @@ reader = SimpleMFRC522()
 serial = i2c(port=1, address=0x3C)
 oled = ssd1306(serial, width=128, height=32)
 
-font_path = "/home/jtinova/Downloads/DejaVu_Sans/DejaVuSans-Bold.ttf"
+font_path = "DejaVuSans-Bold.ttf"
 font_size = 14  # Sesuaikan ukuran font untuk layar 128x32
-font = ImageFont.truetype(font_path, font_size)
+font_oled = ImageFont.truetype(font_path, font_size)
 
 # Set the GPIO mode jika belum diatur
 try:
@@ -63,7 +63,13 @@ def buzz(duration):
 
 def oled_display(text, duration):
     with canvas(oled) as draw:
-        draw.text((0, 0), text, font=font, fill="white")
+        # Membagi teks menjadi beberapa baris jika panjangnya melebihi panjang maksimum layar
+        max_chars_per_line = 10  # Panjang maksimum karakter per baris pada layar OLED
+        lines = [text[i:i+max_chars_per_line] for i in range(0, len(text), max_chars_per_line)]
+        y = 0
+        for line in lines:
+            draw.text((0, y), line, font=font_oled, fill="white")
+            y += font_size  # Menambah nilai y agar teks berikutnya dimulai dari baris berikutnya
     time.sleep(duration)
     oled.clear()
 
@@ -107,7 +113,7 @@ def register_member():
 def create_dataset_and_db(uid, text):
     folder_uid = str(uid)
     folder_name = text.replace(" ", "")  # Ganti spasi dengan underscore
-    folder_path = os.path.join(os.getcwd(), "Datasets_User", folder_name)
+    folder_path = os.path.join(os.getcwd(), "Datasets_User", folder_uid)
 
     if os.path.exists(folder_path):
         buzz(0.6)
