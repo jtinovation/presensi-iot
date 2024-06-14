@@ -244,6 +244,7 @@ def main():
 
     cap.release()
     GPIO.cleanup()
+    
 
 if __name__ == "__main__":
 
